@@ -1,5 +1,5 @@
 module DefinePoro
-  class Define
+  class As
     def self.new(*attributes, &block)
       Class.new do
         class_eval(%(

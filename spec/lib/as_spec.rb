@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module DefinePoro
-  describe Define do
+  describe As do
     describe '.new' do
       let(:klass) { described_class.new(:b, :a) }
 
@@ -25,6 +25,8 @@ module DefinePoro
 
         it 'supports block' do
           klass2 = described_class.new(:a) do
+            KLASS2_CONSTANT = 1
+
             def qq
               "a is #{a}"
             end
@@ -36,6 +38,8 @@ module DefinePoro
 
           expect(klass2.new('1').qq).to eq 'a is 1'
           expect(klass2.class_qq).to eq 'class qq'
+          # !!! constant not bound to klass2 but to outer scope :(
+          expect(KLASS2_CONSTANT).to eq 1
         end
       end
 

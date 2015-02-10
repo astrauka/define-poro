@@ -1,5 +1,5 @@
 require 'define-poro/version'
-require 'define-poro/define'
+require 'define-poro/as'
 
 module DefinePoro
 end

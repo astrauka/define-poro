@@ -2,7 +2,27 @@
 
 Plain Old Ruby Object class builder from provided attribute list and block.
 
-## Rationale
+## WARNING
+
+Sadly assignment does not handle constants scope well:
+
+```
+RegisterUser = DefinePoro::As.new(:user, :params) do
+  USER_TYPE = 1
+
+  # logic for registering user
+end
+
+puts USER_TYPE #> 1 WHAT! constant is bound to outer context
+puts RegisterUser::USER_TYPE #> NameError: uninitialized constant RegisterUser::XX
+```
+
+Conclusion - please use old plain ruby objects with initializer and attr_reader,
+fancy things are not always the best ones.
+
+## History
+
+### Rationale
 
 I have been using Struct.new to dynamically create ruby objects that base their identity
 on functionality and not on values.
@@ -39,21 +59,23 @@ end
 Ruby guys are lazy so we would like to type something shorter - that's provided by DefinePoro:
 
 ```
-RegisterUser = DefinePoro::Define.new(:user, :params) do
+RegisterUser = DefinePoro::As.new(:user, :params) do
   # logic for registering user
 end
 ```
 
-The `DefinePoro::Define` implementation is easy and performant ruby code.
+The `DefinePoro::As` implementation is easy and performant ruby code.
 
-## Should you use it?
+### Should you use it?
 
 Yes - if you are lazy to type initializers.
 
 No - if you think that dynamic class definition could be harmful.
 And I believe that in some cases it could.
 
-## Installation
+SURELY NOT - sadly assignment does not handle constants scope well.
+
+### Installation
 
 Add this line to your application's Gemfile:
 
@@ -69,7 +91,7 @@ Or install it yourself as:
 
     $ gem install define-poro
 
-## Usage
+### Usage
 
 Instead of
 
@@ -88,12 +110,12 @@ end
 Define you class via
 
 ```
-RegisterUser = DefinePoro::Define.new(:user, :params) do
+RegisterUser = DefinePoro::As.new(:user, :params) do
   # logic for registering user
 end
 ```
 
-## Contributing
+### Contributing
 
 1. Fork it ( https://github.com/astrauka/define-poro/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
@@ -101,3 +123,7 @@ end
 4. Ensure that you have written specs (rspec)
 5. Push to the branch (`git push origin my-new-feature`)
 6. Create a new Pull Request
+
+### Changelog
+
+`0.1.0` - renamed `DefinePoro::Define` to `DefinePoro::As`
